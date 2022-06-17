@@ -1,6 +1,10 @@
 package trabalho.state;
 
+import java.util.List;
+
 import trabalho.exception.StateException;
+import trabalho.model.ItemPedido;
+import trabalho.model.Pedido;
 
 public class PedidoCanceladoPeloEstabelecimento implements IPedidoState {
 
@@ -10,12 +14,12 @@ public class PedidoCanceladoPeloEstabelecimento implements IPedidoState {
 	}
 
 	@Override
-	public IPedidoState incluirRemoverItemPedido() throws StateException {
+	public List<ItemPedido> incluirRemoverItemPedido( List<ItemPedido> itensPedido ) throws StateException {
 		throw new StateException( "Não é possível incluir/remover item do Pedido no estado Aguardando Pagamento. Deve-se pagar/cancelar o Pedido primeiro." );
 	}
 
 	@Override
-	public IPedidoState concluirPedido() throws StateException {
+	public IPedidoState concluirPedido( Pedido pedido ) throws StateException {
 		throw new StateException( "Não é possível concluir o Pedido no estado Aguardando Pagamento. Deve-se reembolsar/repor o estoque do Pedido primeiro." );
 	}
 

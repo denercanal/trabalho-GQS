@@ -1,8 +1,10 @@
 package trabalho.model;
 
+import trabalho.enums.TipoDescontoEnum;
+
 public class Desconto {
 
-	private String tipo;
+	private TipoDescontoEnum tipo;
 	private double valorDesconto;
 	private double percentual;
 
@@ -10,18 +12,18 @@ public class Desconto {
 		super();
 	}
 
-	public Desconto( String tipo, double valorDesconto, double percentual ) {
+	public Desconto( TipoDescontoEnum tipo, double valorDesconto, double percentual ) {
 		super();
 		this.tipo = tipo;
 		this.valorDesconto = valorDesconto;
 		this.percentual = percentual;
 	}
 
-	public String getTipo() {
+	public TipoDescontoEnum getTipo() {
 		return tipo;
 	}
 
-	public void setTipo( String tipo ) {
+	public void setTipo( TipoDescontoEnum tipo ) {
 		this.tipo = tipo;
 	}
 

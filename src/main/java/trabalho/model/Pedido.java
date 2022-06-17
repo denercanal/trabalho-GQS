@@ -1,6 +1,8 @@
 package trabalho.model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import trabalho.exception.OperacaoInvalidaException;
 import trabalho.exception.StateException;
@@ -11,7 +13,6 @@ import trabalho.state.PedidoCanceladoPeloEstabelecimento;
 import trabalho.state.PedidoConfirmado;
 import trabalho.state.PedidoEmRotaDeEntrega;
 import trabalho.state.PedidoEntregue;
-import trabalho.state.PedidoIncluirRemoverItem;
 import trabalho.state.PedidoNovo;
 import trabalho.state.PedidoProntoParaEntrega;
 import trabalho.state.PedidoReembolsado;
@@ -24,21 +25,15 @@ public class Pedido {
 	private double valorTotalImpostos;
 	private double valorFinalAPagar;
 	private double valorTotalDescontos;
+	private String uf;
+	private Cliente cliente;
+	private List<Imposto> impostos = new ArrayList<Imposto>();
+	private List<Desconto> descontos = new ArrayList<Desconto>();
+	private List<ItemPedido> itensPedido = new ArrayList<ItemPedido>();
 	protected IPedidoState estado;
 
 	public Pedido() {
 		super();
-		this.estado = new PedidoNovo();
-	}
-
-	public Pedido( int numero, LocalDateTime data, double valor, double valorTotalImpostos, double valorFinalAPagar, double valorTotalDescontos ) {
-		super();
-		this.numero = numero;
-		this.data = data;
-		this.valor = valor;
-		this.valorTotalImpostos = valorTotalImpostos;
-		this.valorFinalAPagar = valorFinalAPagar;
-		this.valorTotalDescontos = valorTotalDescontos;
 		this.estado = new PedidoNovo();
 	}
 
@@ -48,18 +43,18 @@ public class Pedido {
 		}
 	}
 
-	public void incluirRemoverItemPedido() throws OperacaoInvalidaException, StateException {
-		if( !( this.estado instanceof PedidoIncluirRemoverItem ) ) {
-			throw new OperacaoInvalidaException( "Operação inválida!" );
-		}
-		this.estado = new PedidoIncluirRemoverItem().incluirRemoverItemPedido();
-	}
-
-	public void concluirPedido() throws OperacaoInvalidaException, StateException {
+	public List<ItemPedido> incluirRemoverItemPedido( List<ItemPedido> itensPedido ) throws OperacaoInvalidaException, StateException {
 		if( !( this.estado instanceof PedidoNovo ) ) {
 			throw new OperacaoInvalidaException( "Operação inválida!" );
 		}
-		this.estado = new PedidoNovo().concluirPedido();
+		return new PedidoNovo().incluirRemoverItemPedido( itensPedido );
+	}
+
+	public void concluirPedido( Pedido pedido ) throws OperacaoInvalidaException, StateException {
+		if( !( this.estado instanceof PedidoNovo ) ) {
+			throw new OperacaoInvalidaException( "Operação inválida!" );
+		}
+		this.estado = new PedidoNovo().concluirPedido( pedido );
 	}
 
 	public void cancelarPedido() throws OperacaoInvalidaException, StateException {
@@ -125,9 +120,6 @@ public class Pedido {
 	}
 
 	public int avaliarAtendimentoPedido() throws OperacaoInvalidaException, StateException {
-		if( !( this.estado instanceof PedidoEntregue ) || !( this.estado instanceof PedidoReembolsado ) ) {
-			throw new OperacaoInvalidaException( "Operação inválida!" );
-		}
 		if( this.estado instanceof PedidoEntregue ) {
 			return new PedidoEntregue().avaliarAtendimentoPedido();
 		}
@@ -184,6 +176,54 @@ public class Pedido {
 
 	public void setValorTotalDescontos( double valorTotalDescontos ) {
 		this.valorTotalDescontos = valorTotalDescontos;
+	}
+
+	public String getUf() {
+		return uf;
+	}
+
+	public void setUf( String uf ) {
+		this.uf = uf;
+	}
+
+	public Cliente getCliente() {
+		return cliente;
+	}
+
+	public void setCliente( Cliente cliente ) {
+		this.cliente = cliente;
+	}
+
+	public List<Imposto> getImpostos() {
+		return impostos;
+	}
+
+	public void setImpostos( List<Imposto> impostos ) {
+		this.impostos = impostos;
+	}
+
+	public List<Desconto> getDescontos() {
+		return descontos;
+	}
+
+	public void setDescontos( List<Desconto> descontos ) {
+		this.descontos = descontos;
+	}
+
+	public List<ItemPedido> getItensPedido() {
+		return itensPedido;
+	}
+
+	public void setItensPedido( List<ItemPedido> itensPedido ) {
+		this.itensPedido = itensPedido;
+	}
+
+	public IPedidoState getEstado() {
+		return estado;
+	}
+
+	public void setEstado( IPedidoState estado ) {
+		this.estado = estado;
 	}
 
 }

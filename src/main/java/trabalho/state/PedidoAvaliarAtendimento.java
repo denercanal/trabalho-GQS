@@ -1,8 +1,11 @@
 package trabalho.state;
 
+import java.util.List;
 import java.util.Scanner;
 
 import trabalho.exception.StateException;
+import trabalho.model.ItemPedido;
+import trabalho.model.Pedido;
 
 public class PedidoAvaliarAtendimento implements IPedidoState {
 
@@ -12,12 +15,12 @@ public class PedidoAvaliarAtendimento implements IPedidoState {
 	}
 
 	@Override
-	public IPedidoState incluirRemoverItemPedido() throws StateException {
+	public List<ItemPedido> incluirRemoverItemPedido( List<ItemPedido> itensPedido ) throws StateException {
 		throw new StateException( "Não é possível incluir/remover item do Pedido no estado Aguardando Pagamento. Deve-se pagar/cancelar o Pedido primeiro." );
 	}
 
 	@Override
-	public IPedidoState concluirPedido() throws StateException {
+	public IPedidoState concluirPedido( Pedido pedido ) throws StateException {
 		throw new StateException( "Não é possível avaliar o atendimento do Pedido no estado Aguardando Pagamento. Deve-se pagar o Pedido primeiro." );
 	}
 
@@ -58,7 +61,8 @@ public class PedidoAvaliarAtendimento implements IPedidoState {
 		int avaliacao;
 		do {
 			System.out.println( "Insira um número de 0 a 5!" );
-			avaliacao = sc.nextInt();
+//			avaliacao = sc.nextInt();
+			avaliacao = 5;
 		} while( avaliacao < 0 || avaliacao > 5 );
 
 		sc.close();
