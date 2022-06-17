@@ -6,6 +6,8 @@ public interface IPedidoState {
 
 	public IPedidoState criarPedido() throws StateException;
 
+	public IPedidoState incluirRemoverItemPedido() throws StateException;
+
 	public IPedidoState concluirPedido() throws StateException;
 
 	public IPedidoState cancelarPedido() throws StateException;
@@ -14,12 +16,12 @@ public interface IPedidoState {
 
 	public IPedidoState prepararPedido() throws StateException;
 
-	public IPedidoState enviarPedido() throws StateException;
+	public IPedidoState sairParaEntregarPedido() throws StateException;
 
 	public IPedidoState entregarPedido() throws StateException;
 
 	public IPedidoState reembolsarPedido() throws StateException;
 
-	public IPedidoState finalizarPedido() throws StateException;
+	public int avaliarAtendimentoPedido() throws StateException;
 
 }
