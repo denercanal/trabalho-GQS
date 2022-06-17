@@ -2,6 +2,7 @@ package trabalho;
 
 import java.time.LocalDateTime;
 
+import trabalho.exception.OperacaoInvalidaException;
 import trabalho.exception.StateException;
 import trabalho.model.Pedido;
 
@@ -29,6 +30,8 @@ public class Application {
 			System.out.println( "Pedido realizado com sucesso! Avaliação: " + avaliacao );
 		} catch ( StateException se ) {
 			se.printStackTrace();
+		} catch ( OperacaoInvalidaException oie ) {
+			oie.printStackTrace();
 		}
 
 	}

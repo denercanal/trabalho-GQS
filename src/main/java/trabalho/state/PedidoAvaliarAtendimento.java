@@ -53,13 +53,13 @@ public class PedidoAvaliarAtendimento implements IPedidoState {
 
 	@Override
 	public int avaliarAtendimentoPedido() throws StateException {
-		System.out.println( "Por favor, avalie o Atendimento do Pedido: de 0 a 10." );
+		System.out.println( "Por favor, avalie o Atendimento do Pedido: de 0 a 5." );
 		var sc = new Scanner( System.in );
 		int avaliacao;
 		do {
-			System.out.println( "Insira um número de 0 a 10!" );
+			System.out.println( "Insira um número de 0 a 5!" );
 			avaliacao = sc.nextInt();
-		} while( avaliacao < 0 || avaliacao > 10 );
+		} while( avaliacao < 0 || avaliacao > 5 );
 
 		sc.close();
 		return avaliacao;

@@ -42,27 +42,27 @@ public class Pedido {
 		this.estado = new PedidoNovo();
 	}
 
-	public void criarPedido() throws StateException {
+	public void criarPedido() throws OperacaoInvalidaException, StateException {
 		if( this.estado == null ) {
 			this.estado = new PedidoNovo().criarPedido();
 		}
 	}
 
-	public void incluirRemoverItemPedido() throws StateException {
+	public void incluirRemoverItemPedido() throws OperacaoInvalidaException, StateException {
 		if( !( this.estado instanceof PedidoIncluirRemoverItem ) ) {
 			throw new OperacaoInvalidaException( "Operação inválida!" );
 		}
 		this.estado = new PedidoIncluirRemoverItem().incluirRemoverItemPedido();
 	}
 
-	public void concluirPedido() throws StateException {
+	public void concluirPedido() throws OperacaoInvalidaException, StateException {
 		if( !( this.estado instanceof PedidoNovo ) ) {
 			throw new OperacaoInvalidaException( "Operação inválida!" );
 		}
 		this.estado = new PedidoNovo().concluirPedido();
 	}
 
-	public void cancelarPedido() throws StateException {
+	public void cancelarPedido() throws OperacaoInvalidaException, StateException {
 		if( !( this.estado instanceof PedidoNovo ) || !( this.estado instanceof PedidoAguardandoPagamento ) || !( this.estado instanceof PedidoProntoParaEntrega ) || !( this.estado instanceof PedidoConfirmado ) ) {
 			throw new OperacaoInvalidaException( "Operação inválida!" );
 		}
@@ -83,35 +83,35 @@ public class Pedido {
 		}
 	}
 
-	public void pagarPedido() throws StateException {
+	public void pagarPedido() throws OperacaoInvalidaException, StateException {
 		if( !( this.estado instanceof PedidoAguardandoPagamento ) ) {
 			throw new OperacaoInvalidaException( "Operação inválida!" );
 		}
 		this.estado = new PedidoAguardandoPagamento().pagarPedido();
 	}
 
-	public void prepararPedido() throws StateException {
+	public void prepararPedido() throws OperacaoInvalidaException, StateException {
 		if( !( this.estado instanceof PedidoConfirmado ) ) {
 			throw new OperacaoInvalidaException( "Operação inválida!" );
 		}
 		this.estado = new PedidoConfirmado().prepararPedido();
 	}
 
-	public void sairParaEntregarPedido() throws StateException {
+	public void sairParaEntregarPedido() throws OperacaoInvalidaException, StateException {
 		if( !( this.estado instanceof PedidoProntoParaEntrega ) ) {
 			throw new OperacaoInvalidaException( "Operação inválida!" );
 		}
 		this.estado = new PedidoProntoParaEntrega().sairParaEntregarPedido();
 	}
 
-	public void entregarPedido() throws StateException {
+	public void entregarPedido() throws OperacaoInvalidaException, StateException {
 		if( !( this.estado instanceof PedidoEmRotaDeEntrega ) ) {
 			throw new OperacaoInvalidaException( "Operação inválida!" );
 		}
 		this.estado = new PedidoEmRotaDeEntrega().entregarPedido();
 	}
 
-	public void reembolsarPedido() throws StateException {
+	public void reembolsarPedido() throws OperacaoInvalidaException, StateException {
 		if( !( this.estado instanceof PedidoCanceladoPeloEstabelecimento ) || !( this.estado instanceof PedidoCanceladoPeloCliente ) ) {
 			throw new OperacaoInvalidaException( "Operação inválida!" );
 		}
@@ -124,7 +124,7 @@ public class Pedido {
 		}
 	}
 
-	public int avaliarAtendimentoPedido() throws StateException {
+	public int avaliarAtendimentoPedido() throws OperacaoInvalidaException, StateException {
 		if( !( this.estado instanceof PedidoEntregue ) || !( this.estado instanceof PedidoReembolsado ) ) {
 			throw new OperacaoInvalidaException( "Operação inválida!" );
 		}
