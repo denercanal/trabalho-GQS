@@ -37,6 +37,22 @@ public class Pedido {
 		this.estado = new PedidoNovo();
 	}
 
+	public Pedido( int numero, LocalDateTime data, double valor, double valorTotalImpostos, double valorFinalAPagar, double valorTotalDescontos, String uf, Cliente cliente, List<Imposto> impostos, List<Desconto> descontos, List<ItemPedido> itensPedido ) {
+		super();
+		this.numero = numero;
+		this.data = data;
+		this.valor = valor;
+		this.valorTotalImpostos = valorTotalImpostos;
+		this.valorFinalAPagar = valorFinalAPagar;
+		this.valorTotalDescontos = valorTotalDescontos;
+		this.uf = uf;
+		this.cliente = cliente;
+		this.impostos = impostos;
+		this.descontos = descontos;
+		this.itensPedido = itensPedido;
+		this.estado = new PedidoNovo();
+	}
+
 	public void criarPedido() throws OperacaoInvalidaException, StateException {
 		if( this.estado == null ) {
 			this.estado = new PedidoNovo().criarPedido();
@@ -78,11 +94,11 @@ public class Pedido {
 		}
 	}
 
-	public void pagarPedido() throws OperacaoInvalidaException, StateException {
+	public void pagarPedido( Pedido pedido ) throws OperacaoInvalidaException, StateException {
 		if( !( this.estado instanceof PedidoAguardandoPagamento ) ) {
 			throw new OperacaoInvalidaException( "Operação inválida!" );
 		}
-		this.estado = new PedidoAguardandoPagamento().pagarPedido();
+		this.estado = new PedidoAguardandoPagamento().pagarPedido( pedido );
 	}
 
 	public void prepararPedido() throws OperacaoInvalidaException, StateException {

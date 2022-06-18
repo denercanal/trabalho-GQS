@@ -29,7 +29,7 @@ public class PedidoAguardandoPagamento implements IPedidoState {
 	}
 
 	@Override
-	public IPedidoState pagarPedido() throws StateException {
+	public IPedidoState pagarPedido( Pedido pedido ) throws StateException {
 		return new PedidoConfirmado();
 	}
 

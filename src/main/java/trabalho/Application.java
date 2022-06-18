@@ -32,7 +32,7 @@ public class Application {
 		try {
 			pedido.criarPedido();
 			pedido.concluirPedido( pedido );
-			pedido.pagarPedido();
+			pedido.pagarPedido( pedido );
 			pedido.prepararPedido();
 			pedido.sairParaEntregarPedido();
 			pedido.entregarPedido();

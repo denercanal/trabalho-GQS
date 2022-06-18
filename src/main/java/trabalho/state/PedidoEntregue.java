@@ -29,7 +29,7 @@ public class PedidoEntregue implements IPedidoState {
 	}
 
 	@Override
-	public IPedidoState pagarPedido() throws StateException {
+	public IPedidoState pagarPedido( Pedido pedido ) throws StateException {
 		throw new StateException( "Não é possível pagar o Pedido no estado Entregue. Deve-se avaliar o atendimento do Pedido primeiro." );
 	}
 

@@ -16,7 +16,7 @@ public interface IPedidoState {
 
 	public IPedidoState cancelarPedido() throws StateException;
 
-	public IPedidoState pagarPedido() throws StateException;
+	public IPedidoState pagarPedido( Pedido pedido ) throws StateException;
 
 	public IPedidoState prepararPedido() throws StateException;
 

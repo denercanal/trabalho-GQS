@@ -29,7 +29,7 @@ public class PedidoEmRotaDeEntrega implements IPedidoState {
 	}
 
 	@Override
-	public IPedidoState pagarPedido() throws StateException {
+	public IPedidoState pagarPedido( Pedido pedido ) throws StateException {
 		throw new StateException( "Não é possível pagar o Pedido no estado Em Rota De Entrega. Deve-se entregar o Pedido primeiro." );
 	}
 

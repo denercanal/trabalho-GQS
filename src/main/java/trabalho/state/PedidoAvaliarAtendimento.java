@@ -30,7 +30,7 @@ public class PedidoAvaliarAtendimento implements IPedidoState {
 	}
 
 	@Override
-	public IPedidoState pagarPedido() throws StateException {
+	public IPedidoState pagarPedido( Pedido pedido ) throws StateException {
 		throw new StateException( "Não é possível avaliar o atendimento do Pedido no estado Aguardando Pagamento. Deve-se pagar o Pedido primeiro." );
 	}
 

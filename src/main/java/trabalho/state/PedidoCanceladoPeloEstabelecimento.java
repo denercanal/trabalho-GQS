@@ -29,7 +29,7 @@ public class PedidoCanceladoPeloEstabelecimento implements IPedidoState {
 	}
 
 	@Override
-	public IPedidoState pagarPedido() throws StateException {
+	public IPedidoState pagarPedido( Pedido pedido ) throws StateException {
 		throw new StateException( "Não é possível pagar o Pedido no estado Aguardando Pagamento. Deve-se reembolsar/repor o estoque do Pedido primeiro." );
 	}
 

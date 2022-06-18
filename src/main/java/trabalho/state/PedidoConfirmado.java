@@ -29,7 +29,7 @@ public class PedidoConfirmado implements IPedidoState {
 	}
 
 	@Override
-	public IPedidoState pagarPedido() throws StateException {
+	public IPedidoState pagarPedido( Pedido pedido ) throws StateException {
 		throw new StateException( "Não é possível pagar o Pedido no estado Confirmado. Deve-se cancelar/preparar o Pedido primeiro." );
 	}
 

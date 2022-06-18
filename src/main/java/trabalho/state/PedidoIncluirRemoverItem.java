@@ -84,7 +84,7 @@ public class PedidoIncluirRemoverItem implements IPedidoState {
 	}
 
 	@Override
-	public IPedidoState pagarPedido() throws StateException {
+	public IPedidoState pagarPedido( Pedido pedido ) throws StateException {
 		throw new StateException( "Não é possível avaliar o atendimento do Pedido no estado Incluir Remover Item. Deve-se concluir/cancelar o Pedido primeiro." );
 	}
 
