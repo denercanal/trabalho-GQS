@@ -12,7 +12,7 @@ public class Application {
 	public static void main( String[] args ) {
 		var pedido = new Pedido();
 
-		pedido.setCliente( new Cliente( "Teste" ) );
+		pedido.setCliente( new Cliente( "teste 2" ) );
 
 		try {
 			var listaItemPedido = pedido.incluirRemoverItemPedido( pedido.getItensPedido() );
