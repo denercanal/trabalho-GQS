@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import trabalho.exception.DAOException;
 import trabalho.model.Pedido;
 
 public class PedidoDAO {
@@ -24,14 +23,9 @@ public class PedidoDAO {
 	}
 
 	public void adicionaPedido( Pedido pedido ) {
-		if( this.getPedidos().contains( pedido ) ) {
-			throw new DAOException( "Pedido " + pedido.getNumero() + " já existente na lista!" );
+		if( !this.getPedidos().contains( pedido ) ) {
+			pedidos.add( pedido );
 		}
-		pedidos.add( pedido );
-	}
-
-	public Pedido buscaPedidoPorNumero( int numero ) {
-		return pedidos.stream().filter( p -> p.getNumero() == numero ).findFirst().orElseThrow();
 	}
 
 	public List<Pedido> getPedidos() {

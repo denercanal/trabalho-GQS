@@ -1,6 +1,5 @@
 package trabalho.business;
 
-import java.util.Scanner;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -147,7 +146,7 @@ public class PedidoBusiness {
 		}
 	}
 
-	public void avaliarAtendimentoPedido() throws OperacaoInvalidaException {
+	public void avaliarAtendimentoPedido() throws OperacaoInvalidaException, StateException {
 		boolean isOperacaoValida = !( pedido.getEstado() instanceof EntregueState ) || !( pedido.getEstado() instanceof ReembolsadoState );
 		if( !isOperacaoValida ) {
 			operacaoInvalida();
@@ -155,10 +154,12 @@ public class PedidoBusiness {
 
 			if( pedido.getEstado() instanceof EntregueState ) {
 				avaliarAtendimento();
+				pedido.setEstado( pedido.getEstado().avaliarAtendimentoPedido() );
 			}
 
 			if( pedido.getEstado() instanceof ReembolsadoState ) {
 				avaliarAtendimento();
+				pedido.setEstado( pedido.getEstado().avaliarAtendimentoPedido() );
 			}
 		}
 	}
@@ -230,9 +231,10 @@ public class PedidoBusiness {
 		int avaliacao;
 		do {
 			LOGGER.info( "Digite um número: " );
-			Scanner scanner = new Scanner( System.in );
-			avaliacao = scanner.nextInt();
-			scanner.close();
+//			Scanner scanner = new Scanner( System.in );
+//			avaliacao = scanner.nextInt();
+//			scanner.close();
+			avaliacao = 5;
 		} while( avaliacao < 1 || avaliacao > 5 );
 
 		LOGGER.info( "Avaliação do pedido: " + avaliacao );
@@ -277,10 +279,9 @@ public class PedidoBusiness {
 
 	private void esvaziarListaItens() {
 		var itensPedido = pedido.getItensPedido();
-		if( itensPedido.isEmpty() ) {
-			throw new DAOException( "Não se pode esvaziar uma lista de produtos vazia!" );
+		if( !itensPedido.isEmpty() ) {
+			itensPedido.clear();
 		}
-		itensPedido.clear();
 	}
 
 	private void incluirCestaNoPedido( TipoCestaEnum tipoCesta ) {

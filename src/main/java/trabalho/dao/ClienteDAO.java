@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import trabalho.exception.DAOException;
 import trabalho.model.Cliente;
 
 public class ClienteDAO {
@@ -28,27 +27,9 @@ public class ClienteDAO {
 		return instance;
 	}
 
-	public void adicionaCliente( Cliente cliente ) {
-		if( this.getClientes().contains( cliente ) ) {
-			throw new DAOException( "Cliente " + cliente.getNome() + " já existente na lista!" );
-		}
-		this.clientes.add( cliente );
-	}
-
-	public Cliente buscaClientePorNome( String nome ) {
-		return clientes.stream().filter( c -> c.getNome().equalsIgnoreCase( nome ) ).findFirst().orElseThrow();
-	}
-
 	public Cliente buscaClienteAleatorio() {
 		Collections.shuffle( clientes );
 		return clientes.get( 0 );
 	}
 
-	public List<Cliente> getClientes() {
-		return Collections.unmodifiableList( this.clientes );
-	}
-
-	public int getQuantidadeClientes() {
-		return this.clientes.size();
-	}
 }

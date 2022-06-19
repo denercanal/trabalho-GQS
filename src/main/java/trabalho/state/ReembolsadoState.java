@@ -5,15 +5,11 @@ import trabalho.exception.StateException;
 
 public class ReembolsadoState extends AbstractState {
 
-	private PedidoBusiness pedidoBusiness;
-
-	public ReembolsadoState( PedidoBusiness pedidoBusiness ) {
-		this.pedidoBusiness = pedidoBusiness;
-	}
+	public ReembolsadoState( PedidoBusiness pedidoBusiness ) {}
 
 	@Override
-	public void avaliarAtendimentoPedido() throws StateException {
-		pedidoBusiness.avaliarAtendimentoPedido();
+	public AbstractState avaliarAtendimentoPedido() throws StateException {
+		return null;
 	}
 
 }

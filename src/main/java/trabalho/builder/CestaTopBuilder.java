@@ -34,7 +34,7 @@ public class CestaTopBuilder implements ICestaBuilder {
 
 	@Override
 	public void adicionarGraos() {
-		itensPedido.add( new ItemPedido( ProdutoDAO.getInstance().buscaProdutoPorId( 3 ), 6 ) );
+		itensPedido.add( new ItemPedido( ProdutoDAO.getInstance().buscaProdutoPorId( 3 ), 2 ) );
 		itensPedido.add( new ItemPedido( ProdutoDAO.getInstance().buscaProdutoPorId( 6 ), 1 ) );
 		itensPedido.add( new ItemPedido( ProdutoDAO.getInstance().buscaProdutoPorId( 9 ), 1 ) );
 		itensPedido.add( new ItemPedido( ProdutoDAO.getInstance().buscaProdutoPorId( 11 ), 3 ) );
