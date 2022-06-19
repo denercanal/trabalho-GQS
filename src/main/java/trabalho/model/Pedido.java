@@ -161,7 +161,7 @@ public class Pedido {
 	@Override
 	public String toString() {
 		return "Pedido [numero=" + numero + ", data=" + data + ", valorTotal=" + valorTotal + ", valorTotalImpostos=" + valorTotalImpostos + ", valorFinalAPagar=" + valorFinalAPagar + ", valorTotalDescontos=" + valorTotalDescontos + ", uf=" + uf + ", cliente=" + cliente + ", impostos=" + impostos
-				+ ", descontos=" + descontos + ", itensPedido=" + itensPedido + ", estado=" + estado + "]";
+				+ ", descontos=" + descontos + ", itensPedido=" + itensPedido + ", cestas=" + cestas + ", estado=" + estado + "]";
 	}
 
 }
