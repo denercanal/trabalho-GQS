@@ -1,7 +1,9 @@
 package trabalho.business;
 
-import java.util.Scanner;
 import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import trabalho.builder.Builder;
 import trabalho.builder.CestaBasicaBuilder;
@@ -31,6 +33,7 @@ import trabalho.state.ReembolsadoState;
 public class PedidoBusiness {
 
 	private static final int CEM = 100;
+	private Logger LOGGER = LoggerFactory.getLogger( PedidoBusiness.class );
 
 	private Pedido pedido;
 
@@ -143,7 +146,7 @@ public class PedidoBusiness {
 		}
 	}
 
-	public void avaliarAtendimentoPedido() throws OperacaoInvalidaException {
+	public void avaliarAtendimentoPedido() throws OperacaoInvalidaException, StateException {
 		boolean isOperacaoValida = !( pedido.getEstado() instanceof EntregueState ) || !( pedido.getEstado() instanceof ReembolsadoState );
 		if( !isOperacaoValida ) {
 			operacaoInvalida();
@@ -151,10 +154,12 @@ public class PedidoBusiness {
 
 			if( pedido.getEstado() instanceof EntregueState ) {
 				avaliarAtendimento();
+				pedido.setEstado( pedido.getEstado().avaliarAtendimentoPedido() );
 			}
 
 			if( pedido.getEstado() instanceof ReembolsadoState ) {
 				avaliarAtendimento();
+				pedido.setEstado( pedido.getEstado().avaliarAtendimentoPedido() );
 			}
 		}
 	}
@@ -211,10 +216,10 @@ public class PedidoBusiness {
 	}
 
 	private void imprimirValoresPedido() {
-		System.out.println( pedido.toString() );
-		System.out.println( "O valor final do pedido é: " + pedido.getValorFinalAPagar() );
-		System.out.println( "O valor do desconto do pedido é: " + pedido.getValorTotalDescontos() );
-		System.out.println( "O valor do imposto do pedido é: " + pedido.getValorTotalImpostos() );
+		LOGGER.info( pedido.toString() );
+		LOGGER.info( "O valor final do pedido é: " + pedido.getValorFinalAPagar() );
+		LOGGER.info( "O valor do desconto do pedido é: " + pedido.getValorTotalDescontos() );
+		LOGGER.info( "O valor do imposto do pedido é: " + pedido.getValorTotalImpostos() );
 	}
 
 	private double getValorCalculado( double valorFinalAPagar, int perc ) {
@@ -222,16 +227,17 @@ public class PedidoBusiness {
 	}
 
 	private void avaliarAtendimento() {
-		System.out.println( "Por favor, avalie o Atendimento do Pedido com um número de 1 a 5" );
+		LOGGER.info( "Por favor, avalie o Atendimento do Pedido com um número de 1 a 5" );
 		int avaliacao;
 		do {
-			System.out.print( "Digite um número: " );
-			Scanner scanner = new Scanner( System.in );
-			avaliacao = scanner.nextInt();
-			scanner.close();
+			LOGGER.info( "Digite um número: " );
+//			Scanner scanner = new Scanner( System.in );
+//			avaliacao = scanner.nextInt();
+//			scanner.close();
+			avaliacao = 5;
 		} while( avaliacao < 1 || avaliacao > 5 );
 
-		System.out.println( "Avaliação do pedido: " + avaliacao );
+		LOGGER.info( "Avaliação do pedido: " + avaliacao );
 	}
 
 	private void incluirItemPedidoNaLista( int idProduto, double quantidade ) {
@@ -273,10 +279,9 @@ public class PedidoBusiness {
 
 	private void esvaziarListaItens() {
 		var itensPedido = pedido.getItensPedido();
-		if( itensPedido.isEmpty() ) {
-			throw new DAOException( "Não se pode esvaziar uma lista de produtos vazia!" );
+		if( !itensPedido.isEmpty() ) {
+			itensPedido.clear();
 		}
-		itensPedido.clear();
 	}
 
 	private void incluirCestaNoPedido( TipoCestaEnum tipoCesta ) {
@@ -311,7 +316,7 @@ public class PedidoBusiness {
 		}
 
 		adicionarCesta( cesta );
-		System.out.println( "Cesta " + tipoCesta.name() + " adicionada com sucesso!" );
+		LOGGER.info( "Cesta " + tipoCesta.name() + " adicionada com sucesso!" );
 	}
 
 	private void adicionarCesta( Cesta cesta ) {

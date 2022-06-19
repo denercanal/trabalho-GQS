@@ -1,7 +1,6 @@
 package trabalho.dao;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import trabalho.exception.DAOException;
@@ -16,7 +15,7 @@ public class ProdutoDAO {
 		produtos = new ArrayList<Produto>();
 		produtos.add( new Produto( 1, "Achocolatado em Pó", 6, 11.99 ) );
 		produtos.add( new Produto( 2, "Açúcar Refinado", 15, 29.9 ) );
-		produtos.add( new Produto( 3, "Arroz Agulhinha Tipo 1", 8, 24.10 ) );
+		produtos.add( new Produto( 3, "Arroz Agulhinha Tipo 1", 50, 24.10 ) );
 		produtos.add( new Produto( 4, "Biscoito Recheado (Sabores)", 5, 3.78 ) );
 		produtos.add( new Produto( 5, "Biscoito Cream Cracker", 15, 4.95 ) );
 		produtos.add( new Produto( 6, "Café Torrado e Moído", 7, 19.50 ) );
@@ -24,7 +23,7 @@ public class ProdutoDAO {
 		produtos.add( new Produto( 8, "Ervilha em Conserva", 9, 19.30 ) );
 		produtos.add( new Produto( 9, "Farinha de Trigo", 7, 3.55 ) );
 		produtos.add( new Produto( 10, "Farinha de Mandioca Temperada", 6, 2.70 ) );
-		produtos.add( new Produto( 11, "Feijão Carioca Tipo 1", 6, 6.65 ) );
+		produtos.add( new Produto( 11, "Feijão Carioca Tipo 1", 50, 6.65 ) );
 		produtos.add( new Produto( 12, "Fubá Mimoso", 14, 3.71 ) );
 		produtos.add( new Produto( 13, "Leite em Pó Integral", 5, 25.79 ) );
 		produtos.add( new Produto( 14, "Macarrão Espaguete", 13, 3.15 ) );
@@ -83,25 +82,13 @@ public class ProdutoDAO {
 		if( quantidadeEmEstoque >= quantidade ) {
 			produto.decrementaEstoque( quantidade );
 		} else {
-			throw new DAOException( "Quantiade (" + quantidade + ") do produto " + id + " insuficiente em estoque (" + quantidadeEmEstoque + ")" );
+			throw new DAOException( "Quantidade (" + quantidade + ") do produto " + id + " insuficiente em estoque (" + quantidadeEmEstoque + ")" );
 		}
 
 	}
 
 	public Produto buscaProdutoPorId( int id ) {
 		return produtos.stream().filter( p -> p.getId() == id ).findFirst().orElseThrow();
-	}
-
-	public Produto buscaProdutoPorNome( String nome ) {
-		return produtos.stream().filter( p -> p.getNome().equalsIgnoreCase( nome ) ).findFirst().orElseThrow();
-	}
-
-	public List<Produto> getProdutos() {
-		return Collections.unmodifiableList( produtos );
-	}
-
-	public int getNroProdutos() {
-		return produtos.size();
 	}
 
 }
