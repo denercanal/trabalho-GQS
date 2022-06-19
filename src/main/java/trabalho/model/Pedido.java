@@ -27,6 +27,7 @@ public class Pedido {
 	private List<Imposto> impostos = new ArrayList<Imposto>();
 	private List<Desconto> descontos = new ArrayList<Desconto>();
 	private List<ItemPedido> itensPedido = new ArrayList<ItemPedido>();
+	private List<Cesta> cestas;
 	protected AbstractState estado;
 
 	public Pedido( PedidoBusiness pedidoBusiness ) {
@@ -40,6 +41,7 @@ public class Pedido {
 		this.cliente = ClienteDAO.getInstance().buscaClienteAleatorio();
 		this.impostos = ImpostoDAO.getInstance().getImpostos();
 		this.descontos = DescontoDAO.getInstance().getDescontos();
+		this.cestas = new ArrayList<>();
 		this.estado = new NovoState( pedidoBusiness );
 	}
 
@@ -137,6 +139,14 @@ public class Pedido {
 
 	public void setEstado( AbstractState estado ) {
 		this.estado = estado;
+	}
+
+	public List<Cesta> getCestas() {
+		return cestas;
+	}
+
+	public void setCestas( List<Cesta> cestas ) {
+		this.cestas = cestas;
 	}
 
 	public ItemPedido buscaItemPorProdutoItens( Produto produto ) {

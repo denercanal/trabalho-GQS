@@ -1,12 +1,19 @@
 package trabalho.business;
 
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
+import trabalho.builder.Builder;
+import trabalho.builder.CestaBasicaBuilder;
+import trabalho.builder.CestaEconomicaBuilder;
+import trabalho.builder.CestaTopBuilder;
 import trabalho.dao.PedidoDAO;
 import trabalho.dao.ProdutoDAO;
+import trabalho.enums.TipoCestaEnum;
 import trabalho.exception.DAOException;
 import trabalho.exception.OperacaoInvalidaException;
 import trabalho.exception.StateException;
+import trabalho.model.Cesta;
 import trabalho.model.Desconto;
 import trabalho.model.Imposto;
 import trabalho.model.ItemPedido;
@@ -42,6 +49,13 @@ public class PedidoBusiness {
 		incluirItemPedidoNaLista( idProduto, quantidade );
 	}
 
+	public void incluirCesta( TipoCestaEnum tipoCesta ) throws OperacaoInvalidaException {
+		if( !( pedido.getEstado() instanceof NovoState ) ) {
+			operacaoInvalida();
+		}
+		incluirCestaNoPedido( tipoCesta );
+	}
+
 	public void removerItemPedido( int idProduto, double quantidade ) throws OperacaoInvalidaException {
 		if( !( pedido.getEstado() instanceof NovoState ) ) {
 			operacaoInvalida();
@@ -53,15 +67,15 @@ public class PedidoBusiness {
 		if( !( pedido.getEstado() instanceof NovoState ) ) {
 			operacaoInvalida();
 		}
-		calcularValores();
+		calcularValoresItensPedido();
 		imprimirValoresPedido();
 		adicionaPedido();
 		pedido.setEstado( pedido.getEstado().concluirPedido() );
 	}
 
 	public void cancelarPedido() throws OperacaoInvalidaException, StateException {
-		boolean isOperacaoInvalida = !( pedido.getEstado() instanceof NovoState ) || !( pedido.getEstado() instanceof AguardandoPagamentoState ) || !( pedido.getEstado() instanceof ProntoParaEntregaState ) || !( pedido.getEstado() instanceof ConfirmadoState );
-		if( isOperacaoInvalida ) {
+		boolean isOperacaoValida = !( pedido.getEstado() instanceof NovoState ) || !( pedido.getEstado() instanceof AguardandoPagamentoState ) || !( pedido.getEstado() instanceof ProntoParaEntregaState ) || !( pedido.getEstado() instanceof ConfirmadoState );
+		if( !isOperacaoValida ) {
 			operacaoInvalida();
 		} else {
 			if( pedido.getEstado() instanceof NovoState ) {
@@ -112,8 +126,8 @@ public class PedidoBusiness {
 	}
 
 	public void reembolsarPedido() throws OperacaoInvalidaException, StateException {
-		boolean isOperacaoInvalida = !( pedido.getEstado() instanceof CanceladoPeloEstabelecimentoState ) || !( pedido.getEstado() instanceof CanceladoPeloClienteState );
-		if( isOperacaoInvalida ) {
+		boolean isOperacaoValida = !( pedido.getEstado() instanceof CanceladoPeloEstabelecimentoState ) || !( pedido.getEstado() instanceof CanceladoPeloClienteState );
+		if( !isOperacaoValida ) {
 			operacaoInvalida();
 		} else {
 			if( pedido.getEstado() instanceof CanceladoPeloEstabelecimentoState ) {
@@ -130,8 +144,8 @@ public class PedidoBusiness {
 	}
 
 	public void avaliarAtendimentoPedido() throws OperacaoInvalidaException {
-		boolean isOperacaoInvalida = !( pedido.getEstado() instanceof EntregueState ) || !( pedido.getEstado() instanceof ReembolsadoState );
-		if( isOperacaoInvalida ) {
+		boolean isOperacaoValida = !( pedido.getEstado() instanceof EntregueState ) || !( pedido.getEstado() instanceof ReembolsadoState );
+		if( !isOperacaoValida ) {
 			operacaoInvalida();
 		} else {
 
@@ -160,10 +174,24 @@ public class PedidoBusiness {
 		}
 	}
 
-	private void calcularValores() {
-		pedido.setValorTotalDescontos( pedido.getValorTotalDescontos() + calculaDescontos( pedido.getValorTotal() ) );
-		pedido.setValorTotalImpostos( pedido.getValorTotalImpostos() + calculaImpostos( pedido.getValorTotal() ) );
-		pedido.setValorFinalAPagar( pedido.getValorTotal() + pedido.getValorTotalImpostos() - pedido.getValorTotalDescontos() );
+	private void calcularValoresItensPedido() {
+		var itensPedidoCesta = pedido.getCestas();
+		var itensPedido = itensPedidoCesta.stream().map( Cesta::getItensPedido ).flatMap( item -> item.stream().map( ItemPedido::getValorTotal ) ).collect( Collectors.toList() );
+
+		var valorTotalCesta = itensPedido.stream().reduce( 0.0, ( subtotal, element ) -> subtotal + element );
+		double valorFinalAPagar;
+		if( pedido.getValorFinalAPagar() == 0.00 ) {
+			valorFinalAPagar = pedido.getValorTotal() + valorTotalCesta + pedido.getValorFinalAPagar();
+		} else {
+			valorFinalAPagar = valorTotalCesta + pedido.getValorFinalAPagar();
+		}
+		var valorTotalDescontos = calculaDescontos( valorFinalAPagar );
+		var valorTotalImpostos = calculaImpostos( valorFinalAPagar );
+
+		pedido.setValorTotalDescontos( pedido.getValorTotalDescontos() + valorTotalDescontos );
+		pedido.setValorTotalImpostos( pedido.getValorTotalImpostos() + valorTotalImpostos );
+		valorFinalAPagar = valorFinalAPagar + pedido.getValorTotalImpostos() - pedido.getValorTotalDescontos();
+		pedido.setValorFinalAPagar( valorFinalAPagar );
 	}
 
 	private double calculaDescontos( double valorFinalAPagar ) {
@@ -207,15 +235,9 @@ public class PedidoBusiness {
 	}
 
 	private void incluirItemPedidoNaLista( int idProduto, double quantidade ) {
-		ProdutoDAO.getInstance().verificaQuantidade( quantidade );
 		var produto = ProdutoDAO.getInstance().buscaProdutoPorId( idProduto );
-		var itensPedido = pedido.getItensPedido();
-		itensPedido.add( new ItemPedido( produto, quantidade ) );
-		var valorTotal = pedido.getValorTotal();
-		for( var itemPedido : itensPedido ) {
-			valorTotal += itemPedido.getValorTotal();
-		}
-		pedido.setValorTotal( valorTotal );
+		ProdutoDAO.getInstance().baixaEstoque( idProduto, quantidade );
+		this.adicionarItem( new ItemPedido( produto, quantidade ) );
 	}
 
 	private void removerItemPedidoDaLista( int idProduto, double quantidade ) {
@@ -228,11 +250,11 @@ public class PedidoBusiness {
 		if( itemPedido.getQuantidade() == quantidade ) {
 			pedido.getItensPedido().remove( itemPedido );
 			pedido.setValorTotal( pedido.getValorTotal() - ( itemPedido.getProduto().getPrecoUnitario() * itemPedido.getQuantidade() ) );
-			calcularValores();
+			calcularValoresItensPedido();
 		} else if( itemPedido.getQuantidade() > quantidade ) {
 			itemPedido.diminuirQuantidade( quantidade );
 			pedido.setValorTotal( pedido.getValorTotal() - itemPedido.getProduto().getPrecoUnitario() * quantidade );
-			calcularValores();
+			calcularValoresItensPedido();
 		} else {
 			throw new DAOException( "Não é possivel remover mais produtos do tipo " + itemPedido.getProduto().getNome() + "do que constam na lista!" );
 		}
@@ -255,6 +277,53 @@ public class PedidoBusiness {
 			throw new DAOException( "Não se pode esvaziar uma lista de produtos vazia!" );
 		}
 		itensPedido.clear();
+	}
+
+	private void incluirCestaNoPedido( TipoCestaEnum tipoCesta ) {
+		Cesta cesta;
+		switch ( tipoCesta ) {
+			case CESTA_BASICA: {
+				var iCestaBuilder = new CestaBasicaBuilder();
+				var builder = new Builder( iCestaBuilder );
+				builder.builderCesta();
+				cesta = iCestaBuilder.getCesta();
+				break;
+			}
+			case CESTA_ECONOMICA: {
+				var iCestaBuilder = new CestaEconomicaBuilder();
+				var builder = new Builder( iCestaBuilder );
+				builder.builderCesta();
+				cesta = iCestaBuilder.getCesta();
+				break;
+			}
+			case CESTA_TOP: {
+				var iCestaBuilder = new CestaTopBuilder();
+				var builder = new Builder( iCestaBuilder );
+				builder.builderCesta();
+				cesta = iCestaBuilder.getCesta();
+				break;
+			}
+			default:
+				throw new RuntimeException( "Tipo inválido de cesta!" );
+		}
+		for( var item : cesta.getItensPedido() ) {
+			ProdutoDAO.getInstance().baixaEstoque( item.getProduto().getId(), item.getQuantidade() );
+		}
+
+		adicionarCesta( cesta );
+		System.out.println( "Cesta " + tipoCesta.getDescricao() + " adicionada com sucesso!" );
+	}
+
+	private void adicionarCesta( Cesta cesta ) {
+		pedido.getCestas().add( cesta );
+		calcularValoresItensPedido();
+	}
+
+	public void adicionarItem( ItemPedido item ) {
+		pedido.getItensPedido().add( item );
+		double valorTotal = pedido.getValorTotal();
+		valorTotal += item.getProduto().getPrecoUnitario() * item.getQuantidade();
+		pedido.setValorTotal( valorTotal );
 	}
 
 }

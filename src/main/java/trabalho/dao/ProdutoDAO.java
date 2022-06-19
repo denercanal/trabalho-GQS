@@ -83,7 +83,7 @@ public class ProdutoDAO {
 		if( quantidadeEmEstoque >= quantidade ) {
 			produto.decrementaEstoque( quantidade );
 		} else {
-			throw new DAOException( "Quantiade (" + quantidade + ") do produto " + id + "insuficiente em estoque (" + quantidadeEmEstoque + ")" );
+			throw new DAOException( "Quantiade (" + quantidade + ") do produto " + id + " insuficiente em estoque (" + quantidadeEmEstoque + ")" );
 		}
 
 	}

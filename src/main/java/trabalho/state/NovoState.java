@@ -1,6 +1,7 @@
 package trabalho.state;
 
 import trabalho.business.PedidoBusiness;
+import trabalho.enums.TipoCestaEnum;
 import trabalho.exception.StateException;
 
 public class NovoState extends AbstractState {
@@ -14,6 +15,11 @@ public class NovoState extends AbstractState {
 	@Override
 	public void incluirItemPedido( int idProduto, double quantidade ) throws StateException {
 		pedidoBusiness.incluirItemPedido( idProduto, quantidade );
+	}
+
+	@Override
+	public void incluirCesta( TipoCestaEnum tipoCesta ) throws StateException {
+		pedidoBusiness.incluirCesta( tipoCesta );
 	}
 
 	@Override

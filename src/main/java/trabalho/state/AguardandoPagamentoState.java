@@ -16,4 +16,9 @@ public class AguardandoPagamentoState extends AbstractState {
 		return new ConfirmadoState( pedidoBusiness );
 	}
 
+	@Override
+	public AbstractState cancelarPedido() throws StateException {
+		return new CanceladoPeloClienteState( pedidoBusiness );
+	}
+
 }
