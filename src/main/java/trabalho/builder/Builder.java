@@ -2,20 +2,20 @@ package trabalho.builder;
 
 public class Builder {
 
-	private ICestaBuilder builder;
+	private ICestaBuilder iCestaBuilder;
 
 	public Builder( ICestaBuilder builder ) {
-		this.builder = builder;
+		this.iCestaBuilder = builder;
 	}
 
 	public ICestaBuilder getBuilder() {
-		return builder;
+		return iCestaBuilder;
 	}
 
 	public void builderCesta() {
-		builder.adicionarGraos();
-		builder.adicionarIndustrializados();
-		builder.adicionarLegumesFrutas();
-		builder.adicionarOrigemAnimal();
+		iCestaBuilder.adicionarGraos();
+		iCestaBuilder.adicionarIndustrializados();
+		iCestaBuilder.adicionarLegumesFrutas();
+		iCestaBuilder.adicionarOrigemAnimal();
 	}
 }

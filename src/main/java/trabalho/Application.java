@@ -1,5 +1,9 @@
 package trabalho;
 
+import trabalho.business.PedidoBusiness;
+import trabalho.dao.PedidoDAO;
+import trabalho.dao.ProdutoDAO;
+import trabalho.enums.TipoCestaEnum;
 import trabalho.exception.OperacaoInvalidaException;
 import trabalho.exception.StateException;
 
@@ -18,18 +22,18 @@ public class Application {
 //		pedidoBusiness1.reembolsarPedido();
 //		pedidoBusiness1.avaliarAtendimentoPedido();
 //
-//		var pedidoBusiness2 = new PedidoBusiness();
-//		pedidoBusiness2.incluirItemPedido( 1, 5 );
-//		pedidoBusiness2.removerItemPedido( 1, 2 );
-//		pedidoBusiness2.concluirPedido();
-//		pedidoBusiness2.pagarPedido();
-//		pedidoBusiness2.prepararPedido();
-//		pedidoBusiness2.sairParaEntregarPedido();
-//		pedidoBusiness2.entregarPedido();
-//		pedidoBusiness2.avaliarAtendimentoPedido();
-//
-//		ProdutoDAO.getInstance().getProdutos().stream().forEach( System.out::println );
-//		PedidoDAO.getInstance().getPedidos().stream().forEach( System.out::println );
+		var pedidoBusiness2 = new PedidoBusiness();
+		pedidoBusiness2.incluirItemPedido( 1, 1 );
+		pedidoBusiness2.incluirCesta( TipoCestaEnum.CESTA_TOP );
+		pedidoBusiness2.incluirCesta( TipoCestaEnum.CESTA_ECONOMICA );
+		pedidoBusiness2.concluirPedido();
+		pedidoBusiness2.pagarPedido();
+		pedidoBusiness2.prepararPedido();
+		pedidoBusiness2.sairParaEntregarPedido();
+		pedidoBusiness2.entregarPedido();
+		pedidoBusiness2.avaliarAtendimentoPedido();
+		ProdutoDAO.getInstance().getProdutos().stream().forEach( System.out::println );
+		PedidoDAO.getInstance().getPedidos().stream().forEach( System.out::println );
 	}
 
 }

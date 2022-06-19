@@ -311,7 +311,7 @@ public class PedidoBusiness {
 		}
 
 		adicionarCesta( cesta );
-		System.out.println( "Cesta " + tipoCesta.getDescricao() + " adicionada com sucesso!" );
+		System.out.println( "Cesta " + tipoCesta.name() + " adicionada com sucesso!" );
 	}
 
 	private void adicionarCesta( Cesta cesta ) {
