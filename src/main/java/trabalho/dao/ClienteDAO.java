@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import trabalho.exception.DAOException;
 import trabalho.model.Cliente;
 
 public class ClienteDAO {
@@ -29,7 +30,7 @@ public class ClienteDAO {
 
 	public void adicionaCliente( Cliente cliente ) {
 		if( this.getClientes().contains( cliente ) ) {
-			throw new RuntimeException( "Cliente " + cliente.getNome() + " já existente na lista!" );
+			throw new DAOException( "Cliente " + cliente.getNome() + " já existente na lista!" );
 		}
 		this.clientes.add( cliente );
 	}

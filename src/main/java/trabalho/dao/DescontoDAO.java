@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import trabalho.enums.TipoDescontoEnum;
+import trabalho.exception.DAOException;
 import trabalho.model.Desconto;
 
 public class DescontoDAO {
@@ -28,14 +29,14 @@ public class DescontoDAO {
 
 	public void adicionaDesconto( Desconto desconto ) {
 		if( this.getDescontos().contains( desconto ) ) {
-			throw new RuntimeException( "Desconto " + desconto.getTipo() + " já existente na lista!" );
+			throw new DAOException( "Desconto " + desconto.getTipo() + " já existente na lista!" );
 		}
 		this.descontos.add( desconto );
 	}
 
 	public void removeDesconto( Desconto desconto ) {
 		if( !this.getDescontos().contains( desconto ) ) {
-			throw new RuntimeException( "Desconto " + desconto.getTipo() + " não existente na lista!" );
+			throw new DAOException( "Desconto " + desconto.getTipo() + " não existente na lista!" );
 		}
 		this.descontos.remove( desconto );
 	}

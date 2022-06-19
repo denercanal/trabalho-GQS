@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import trabalho.exception.DAOException;
 import trabalho.model.Imposto;
 
 public class ImpostoDAO {
@@ -26,14 +27,14 @@ public class ImpostoDAO {
 
 	public void adicionaImposto( Imposto imposto ) {
 		if( this.getImpostos().contains( imposto ) ) {
-			throw new RuntimeException( "Imposto " + imposto.getNome() + " já existente na lista!" );
+			throw new DAOException( "Imposto " + imposto.getNome() + " já existente na lista!" );
 		}
 		impostos.add( imposto );
 	}
 
 	public void removeImposto( Imposto imposto ) {
 		if( !this.getImpostos().contains( imposto ) ) {
-			throw new RuntimeException( "Imposto " + imposto.getNome() + " não existente na lista!" );
+			throw new DAOException( "Imposto " + imposto.getNome() + " não existente na lista!" );
 		}
 		impostos.remove( imposto );
 	}

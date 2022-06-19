@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 import trabalho.dao.PedidoDAO;
 import trabalho.dao.ProdutoDAO;
+import trabalho.exception.DAOException;
 import trabalho.exception.OperacaoInvalidaException;
 import trabalho.exception.StateException;
 import trabalho.model.Desconto;
@@ -222,7 +223,7 @@ public class PedidoBusiness {
 		var itemPedido = this.getPedido().buscaItemPorProdutoItens( produto );
 
 		if( !pedido.getItensPedido().contains( itemPedido ) ) {
-			throw new RuntimeException( "Produto com o código " + itemPedido.getProduto().getId() + " não encontrado na lista de itens!" );
+			throw new DAOException( "Produto com o código " + itemPedido.getProduto().getId() + " não encontrado na lista de itens!" );
 		}
 		if( itemPedido.getQuantidade() == quantidade ) {
 			pedido.getItensPedido().remove( itemPedido );
@@ -233,7 +234,7 @@ public class PedidoBusiness {
 			pedido.setValorTotal( pedido.getValorTotal() - itemPedido.getProduto().getPrecoUnitario() * quantidade );
 			calcularValores();
 		} else {
-			throw new RuntimeException( "Não é possivel remover mais produtos do tipo " + itemPedido.getProduto().getNome() + "do que constam na lista!" );
+			throw new DAOException( "Não é possivel remover mais produtos do tipo " + itemPedido.getProduto().getNome() + "do que constam na lista!" );
 		}
 	}
 
@@ -251,7 +252,7 @@ public class PedidoBusiness {
 	private void esvaziarListaItens() {
 		var itensPedido = pedido.getItensPedido();
 		if( itensPedido.isEmpty() ) {
-			throw new RuntimeException( "Não se pode esvaziar uma lista de produtos vazia!" );
+			throw new DAOException( "Não se pode esvaziar uma lista de produtos vazia!" );
 		}
 		itensPedido.clear();
 	}

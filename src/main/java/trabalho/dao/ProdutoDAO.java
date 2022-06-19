@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import trabalho.exception.DAOException;
 import trabalho.model.Produto;
 
 public class ProdutoDAO {
@@ -61,7 +62,7 @@ public class ProdutoDAO {
 
 	public void verificaQuantidade( double quantidade ) {
 		if( quantidade <= 0 ) {
-			throw new RuntimeException( "Quantidade deve ser > 0" );
+			throw new DAOException( "Quantidade deve ser > 0" );
 		}
 	}
 
@@ -82,7 +83,7 @@ public class ProdutoDAO {
 		if( quantidadeEmEstoque >= quantidade ) {
 			produto.decrementaEstoque( quantidade );
 		} else {
-			throw new RuntimeException( "Quantiade (" + quantidade + ") do produto " + id + "insuficiente em estoque (" + quantidadeEmEstoque + ")" );
+			throw new DAOException( "Quantiade (" + quantidade + ") do produto " + id + "insuficiente em estoque (" + quantidadeEmEstoque + ")" );
 		}
 
 	}
