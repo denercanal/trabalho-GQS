@@ -11,8 +11,8 @@ import trabalho.dao.ImpostoDAO;
 import trabalho.dao.PedidoDAO;
 import trabalho.dao.UfDAO;
 import trabalho.exception.DAOException;
-import trabalho.state.IPedidoState;
-import trabalho.state.PedidoNovo;
+import trabalho.state.AbstractState;
+import trabalho.state.NovoState;
 
 public class Pedido {
 
@@ -27,7 +27,7 @@ public class Pedido {
 	private List<Imposto> impostos = new ArrayList<Imposto>();
 	private List<Desconto> descontos = new ArrayList<Desconto>();
 	private List<ItemPedido> itensPedido = new ArrayList<ItemPedido>();
-	protected IPedidoState estado;
+	protected AbstractState estado;
 
 	public Pedido( PedidoBusiness pedidoBusiness ) {
 		this.numero = PedidoDAO.getInstance().getQuantidadePedidos() + 1;
@@ -40,7 +40,7 @@ public class Pedido {
 		this.cliente = ClienteDAO.getInstance().buscaClienteAleatorio();
 		this.impostos = ImpostoDAO.getInstance().getImpostos();
 		this.descontos = DescontoDAO.getInstance().getDescontos();
-		this.estado = new PedidoNovo( pedidoBusiness );
+		this.estado = new NovoState( pedidoBusiness );
 	}
 
 	public int getNumero() {
@@ -131,11 +131,11 @@ public class Pedido {
 		this.itensPedido = itensPedido;
 	}
 
-	public IPedidoState getEstado() {
+	public AbstractState getEstado() {
 		return estado;
 	}
 
-	public void setEstado( IPedidoState estado ) {
+	public void setEstado( AbstractState estado ) {
 		this.estado = estado;
 	}
 

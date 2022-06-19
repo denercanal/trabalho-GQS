@@ -1,17 +1,19 @@
 package trabalho;
 
+import trabalho.business.PedidoBusiness;
 import trabalho.exception.OperacaoInvalidaException;
 import trabalho.exception.StateException;
 
 public class Application {
 
 	public static void main( String[] args ) throws OperacaoInvalidaException, StateException {
-//		var pedidoBusiness1 = new PedidoBusiness();
-//		pedidoBusiness1.incluirItemPedido( 1, 5 );
-//		pedidoBusiness1.removerItemPedido( 1, 2 );
-//		pedidoBusiness1.cancelarPedido();
-//		pedidoBusiness1.reembolsarPedido();
-//		pedidoBusiness1.avaliarAtendimentoPedido();
+		var pedidoBusiness1 = new PedidoBusiness();
+		pedidoBusiness1.incluirItemPedido( 1, 5 );
+		pedidoBusiness1.removerItemPedido( 1, 2 );
+		pedidoBusiness1.concluirPedido();
+		pedidoBusiness1.cancelarPedido();
+		pedidoBusiness1.reembolsarPedido();
+		pedidoBusiness1.avaliarAtendimentoPedido();
 //
 //		var pedidoBusiness2 = new PedidoBusiness();
 //		pedidoBusiness2.incluirItemPedido( 1, 5 );

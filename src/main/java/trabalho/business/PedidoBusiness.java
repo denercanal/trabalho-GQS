@@ -11,15 +11,15 @@ import trabalho.model.Desconto;
 import trabalho.model.Imposto;
 import trabalho.model.ItemPedido;
 import trabalho.model.Pedido;
-import trabalho.state.PedidoAguardandoPagamento;
-import trabalho.state.PedidoCanceladoPeloCliente;
-import trabalho.state.PedidoCanceladoPeloEstabelecimento;
-import trabalho.state.PedidoConfirmado;
-import trabalho.state.PedidoEmRotaDeEntrega;
-import trabalho.state.PedidoEntregue;
-import trabalho.state.PedidoNovo;
-import trabalho.state.PedidoProntoParaEntrega;
-import trabalho.state.PedidoReembolsado;
+import trabalho.state.AguardandoPagamentoState;
+import trabalho.state.CanceladoPeloClienteState;
+import trabalho.state.CanceladoPeloEstabelecimentoState;
+import trabalho.state.ConfirmadoState;
+import trabalho.state.EmRotaDeEntregaState;
+import trabalho.state.EntregueState;
+import trabalho.state.NovoState;
+import trabalho.state.ProntoParaEntregaState;
+import trabalho.state.ReembolsadoState;
 
 public class PedidoBusiness {
 
@@ -36,21 +36,21 @@ public class PedidoBusiness {
 	}
 
 	public void incluirItemPedido( int idProduto, double quantidade ) throws OperacaoInvalidaException {
-		if( !( pedido.getEstado() instanceof PedidoNovo ) ) {
+		if( !( pedido.getEstado() instanceof NovoState ) ) {
 			operacaoInvalida();
 		}
 		incluirItemPedidoNaLista( idProduto, quantidade );
 	}
 
 	public void removerItemPedido( int idProduto, double quantidade ) throws OperacaoInvalidaException {
-		if( !( pedido.getEstado() instanceof PedidoNovo ) ) {
+		if( !( pedido.getEstado() instanceof NovoState ) ) {
 			operacaoInvalida();
 		}
 		removerItemPedidoDaLista( idProduto, quantidade );
 	}
 
 	public void concluirPedido() throws OperacaoInvalidaException, StateException {
-		if( !( pedido.getEstado() instanceof PedidoNovo ) ) {
+		if( !( pedido.getEstado() instanceof NovoState ) ) {
 			operacaoInvalida();
 		}
 		calcularValores();
@@ -60,30 +60,30 @@ public class PedidoBusiness {
 	}
 
 	public void cancelarPedido() throws OperacaoInvalidaException, StateException {
-		boolean isOperacaoValida = !( pedido.getEstado() instanceof PedidoNovo ) || !( pedido.getEstado() instanceof PedidoAguardandoPagamento ) || !( pedido.getEstado() instanceof PedidoProntoParaEntrega ) || !( pedido.getEstado() instanceof PedidoConfirmado );
-		if( !isOperacaoValida ) {
+		boolean isOperacaoInvalida = !( pedido.getEstado() instanceof NovoState ) || !( pedido.getEstado() instanceof AguardandoPagamentoState ) || !( pedido.getEstado() instanceof ProntoParaEntregaState ) || !( pedido.getEstado() instanceof ConfirmadoState );
+		if( isOperacaoInvalida ) {
 			operacaoInvalida();
 		} else {
-			if( pedido.getEstado() instanceof PedidoNovo ) {
+			if( pedido.getEstado() instanceof NovoState ) {
 				cancelarPedidoEstado();
 			}
 
-			if( pedido.getEstado() instanceof PedidoAguardandoPagamento ) {
+			if( pedido.getEstado() instanceof AguardandoPagamentoState ) {
 				cancelarPedidoEstado();
 			}
 
-			if( pedido.getEstado() instanceof PedidoProntoParaEntrega ) {
+			if( pedido.getEstado() instanceof ProntoParaEntregaState ) {
 				cancelarPedidoEstado();
 			}
 
-			if( pedido.getEstado() instanceof PedidoConfirmado ) {
+			if( pedido.getEstado() instanceof ConfirmadoState ) {
 				cancelarPedidoEstado();
 			}
 		}
 	}
 
 	public void pagarPedido() throws OperacaoInvalidaException, StateException {
-		if( !( pedido.getEstado() instanceof PedidoAguardandoPagamento ) ) {
+		if( !( pedido.getEstado() instanceof AguardandoPagamentoState ) ) {
 			operacaoInvalida();
 		}
 		baixarQuantidadeEstoque();
@@ -91,40 +91,56 @@ public class PedidoBusiness {
 	}
 
 	public void prepararPedido() throws OperacaoInvalidaException, StateException {
-		if( !( pedido.getEstado() instanceof PedidoConfirmado ) ) {
+		if( !( pedido.getEstado() instanceof ConfirmadoState ) ) {
 			operacaoInvalida();
 		}
 		pedido.setEstado( pedido.getEstado().prepararPedido() );
 	}
 
 	public void sairParaEntregarPedido() throws OperacaoInvalidaException, StateException {
-		if( !( pedido.getEstado() instanceof PedidoProntoParaEntrega ) ) {
+		if( !( pedido.getEstado() instanceof ProntoParaEntregaState ) ) {
 			operacaoInvalida();
 		}
 		pedido.setEstado( pedido.getEstado().sairParaEntregarPedido() );
 	}
 
 	public void entregarPedido() throws OperacaoInvalidaException, StateException {
-		if( !( pedido.getEstado() instanceof PedidoEmRotaDeEntrega ) ) {
+		if( !( pedido.getEstado() instanceof EmRotaDeEntregaState ) ) {
 			operacaoInvalida();
 		}
 		pedido.setEstado( pedido.getEstado().entregarPedido() );
 	}
 
 	public void reembolsarPedido() throws OperacaoInvalidaException, StateException {
-		boolean isOperacaoValida = !( pedido.getEstado() instanceof PedidoCanceladoPeloEstabelecimento ) || !( pedido.getEstado() instanceof PedidoCanceladoPeloCliente );
-		if( !isOperacaoValida ) {
+		boolean isOperacaoInvalida = !( pedido.getEstado() instanceof CanceladoPeloEstabelecimentoState ) || !( pedido.getEstado() instanceof CanceladoPeloClienteState );
+		if( isOperacaoInvalida ) {
 			operacaoInvalida();
 		} else {
-			if( pedido.getEstado() instanceof PedidoCanceladoPeloEstabelecimento ) {
+			if( pedido.getEstado() instanceof CanceladoPeloEstabelecimentoState ) {
 				reporEstoque();
 				esvaziarListaItens();
 				pedido.setEstado( pedido.getEstado().reembolsarPedido() );
 			}
 
-			if( pedido.getEstado() instanceof PedidoCanceladoPeloCliente ) {
+			if( pedido.getEstado() instanceof CanceladoPeloClienteState ) {
 				PedidoDAO.getInstance().adicionaPedido( pedido );
 				pedido.setEstado( pedido.getEstado().reembolsarPedido() );
+			}
+		}
+	}
+
+	public void avaliarAtendimentoPedido() throws OperacaoInvalidaException {
+		boolean isOperacaoInvalida = !( pedido.getEstado() instanceof EntregueState ) || !( pedido.getEstado() instanceof ReembolsadoState );
+		if( isOperacaoInvalida ) {
+			operacaoInvalida();
+		} else {
+
+			if( pedido.getEstado() instanceof EntregueState ) {
+				avaliarAtendimento();
+			}
+
+			if( pedido.getEstado() instanceof ReembolsadoState ) {
+				avaliarAtendimento();
 			}
 		}
 	}
@@ -141,22 +157,6 @@ public class PedidoBusiness {
 		var itensPedido = pedido.getItensPedido();
 		for( var itemPedido : itensPedido ) {
 			ProdutoDAO.getInstance().adicionaEstoque( itemPedido.getProduto().getId(), itemPedido.getQuantidade() );
-		}
-	}
-
-	public void avaliarAtendimentoPedido() throws OperacaoInvalidaException {
-		boolean isOperacaoValida = !( pedido.getEstado() instanceof PedidoEntregue ) || !( pedido.getEstado() instanceof PedidoReembolsado );
-		if( !isOperacaoValida ) {
-			operacaoInvalida();
-		} else {
-
-			if( pedido.getEstado() instanceof PedidoEntregue ) {
-				avaliarAtendimento();
-			}
-
-			if( pedido.getEstado() instanceof PedidoReembolsado ) {
-				avaliarAtendimento();
-			}
 		}
 	}
 
