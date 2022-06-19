@@ -1,5 +1,7 @@
 package trabalho.model;
 
+import trabalho.exception.DAOException;
+
 public class ItemPedido {
 
 	private double quantidade;
@@ -52,7 +54,7 @@ public class ItemPedido {
 		if( quantidade > 0 ) {
 			this.quantidade += quantidade;
 		} else {
-			throw new RuntimeException( "Não pode-se adicionar 0 ou menos elementos no pedido!" );
+			throw new DAOException( "Não pode-se adicionar 0 ou menos elementos no pedido!" );
 		}
 	}
 
@@ -60,7 +62,7 @@ public class ItemPedido {
 		if( quantidade <= this.quantidade ) {
 			this.quantidade -= quantidade;
 		} else {
-			throw new RuntimeException( "Não se pode remover um valor maior que existe no pedido!" );
+			throw new DAOException( "Não se pode remover um valor maior que existe no pedido!" );
 		}
 	}
 

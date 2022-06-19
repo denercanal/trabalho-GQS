@@ -10,6 +10,7 @@ import trabalho.dao.DescontoDAO;
 import trabalho.dao.ImpostoDAO;
 import trabalho.dao.PedidoDAO;
 import trabalho.dao.UfDAO;
+import trabalho.exception.DAOException;
 import trabalho.state.IPedidoState;
 import trabalho.state.PedidoNovo;
 
@@ -144,7 +145,7 @@ public class Pedido {
 				return itemPedido;
 			}
 		}
-		throw new RuntimeException( "Produto com o código " + produto.getId() + " não encontrado na lista de itens!" );
+		throw new DAOException( "Produto com o código " + produto.getId() + " não encontrado na lista de itens!" );
 	}
 
 	@Override
