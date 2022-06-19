@@ -1,61 +1,71 @@
 package trabalho.state;
 
-import java.util.List;
-
+import trabalho.business.PedidoBusiness;
 import trabalho.exception.StateException;
-import trabalho.model.ItemPedido;
-import trabalho.model.Pedido;
 
 public class PedidoConfirmado implements IPedidoState {
 
+	private final String EXCEPTION = "Operação em um Estado Inválido!";
+
+	private PedidoBusiness pedidoBusiness;
+
+	public PedidoConfirmado( PedidoBusiness pedidoBusiness ) {
+		this.pedidoBusiness = pedidoBusiness;
+	}
+
 	@Override
 	public IPedidoState criarPedido() throws StateException {
-		throw new StateException( "Não é possível criar o Pedido no estado Confirmado. Deve-se cancelar/preparar o Pedido primeiro." );
+		throw new StateException( EXCEPTION );
 	}
 
 	@Override
-	public List<ItemPedido> incluirRemoverItemPedido( List<ItemPedido> itensPedido ) throws StateException {
-		throw new StateException( "Não é possível incluir/remover item do Pedido no estado Aguardando Pagamento. Deve-se pagar/cancelar o Pedido primeiro." );
+	public void incluirItemPedido( int idProduto, double quantidade ) throws StateException {
+		throw new StateException( EXCEPTION );
 	}
 
 	@Override
-	public IPedidoState concluirPedido( Pedido pedido ) throws StateException {
-		throw new StateException( "Não é possível concluir o Pedido no estado Confirmado. Deve-se cancelar/preparar o Pedido primeiro." );
+	public void removerItemPedido( int idProduto, double quantidade ) throws StateException {
+		throw new StateException( EXCEPTION );
+	}
+
+	@Override
+	public IPedidoState concluirPedido() throws StateException {
+		throw new StateException( EXCEPTION );
 	}
 
 	@Override
 	public IPedidoState cancelarPedido() throws StateException {
-		return new PedidoCanceladoPeloEstabelecimento();
+		return new PedidoCanceladoPeloEstabelecimento( pedidoBusiness );
 	}
 
 	@Override
-	public IPedidoState pagarPedido( Pedido pedido ) throws StateException {
-		throw new StateException( "Não é possível pagar o Pedido no estado Confirmado. Deve-se cancelar/preparar o Pedido primeiro." );
+	public IPedidoState pagarPedido() throws StateException {
+		throw new StateException( EXCEPTION );
 	}
 
 	@Override
 	public IPedidoState prepararPedido() throws StateException {
-		return new PedidoProntoParaEntrega();
+		return new PedidoProntoParaEntrega( pedidoBusiness );
 	}
 
 	@Override
 	public IPedidoState sairParaEntregarPedido() throws StateException {
-		throw new StateException( "Não é possível sair para entregar o Pedido no estado Confirmado. Deve-se cancelar/preparar o Pedido primeiro." );
+		throw new StateException( EXCEPTION );
 	}
 
 	@Override
 	public IPedidoState entregarPedido() throws StateException {
-		throw new StateException( "Não é possível entregar o Pedido no estado Confirmado. Deve-se cancelar/preparar o Pedido primeiro." );
+		throw new StateException( EXCEPTION );
 	}
 
 	@Override
 	public IPedidoState reembolsarPedido() throws StateException {
-		throw new StateException( "Não é possível reembolsar o Pedido no estado Confirmado. Deve-se cancelar/preparar o Pedido primeiro." );
+		throw new StateException( EXCEPTION );
 	}
 
 	@Override
-	public int avaliarAtendimentoPedido() throws StateException {
-		throw new StateException( "Não é possível avaliar o atendimento do Pedido no estado Confirmado. Deve-se cancelar/preparar o Pedido primeiro." );
+	public void avaliarAtendimentoPedido() throws StateException {
+		throw new StateException( EXCEPTION );
 	}
 
 }

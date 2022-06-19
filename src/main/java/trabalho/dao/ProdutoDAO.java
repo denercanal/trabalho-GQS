@@ -8,7 +8,7 @@ import trabalho.model.Produto;
 
 public class ProdutoDAO {
 
-	private ArrayList<Produto> produtos;
+	private List<Produto> produtos;
 	private static ProdutoDAO instance;
 
 	private ProdutoDAO() {
@@ -59,13 +59,13 @@ public class ProdutoDAO {
 		return instance;
 	}
 
-	private void verificaQuantidade( double quantidade ) {
+	public void verificaQuantidade( double quantidade ) {
 		if( quantidade <= 0 ) {
 			throw new RuntimeException( "Quantidade deve ser > 0" );
 		}
 	}
 
-	void adicionaEstoque( int id, double quantidade ) {
+	public void adicionaEstoque( int id, double quantidade ) {
 		verificaQuantidade( quantidade );
 		Produto produto = buscaProdutoPorId( id );
 		produto.incrementaEstoque( quantidade );
@@ -75,7 +75,7 @@ public class ProdutoDAO {
 		return buscaProdutoPorId( id ).getQuantidadeEmEstoque();
 	}
 
-	void baixaEstoque( int id, double quantidade ) {
+	public void baixaEstoque( int id, double quantidade ) {
 		verificaQuantidade( quantidade );
 		Produto produto = buscaProdutoPorId( id );
 		double quantidadeEmEstoque = getQuantidadeEmEstoque( id );
@@ -87,22 +87,12 @@ public class ProdutoDAO {
 
 	}
 
-	public Produto buscaProdutoPorNome( String nome ) {
-		for( Produto produto : produtos ) {
-			if( produto.getNome().equalsIgnoreCase( nome ) ) {
-				return produto;
-			}
-		}
-		throw new RuntimeException( "Produto " + nome + " não encontrado!" );
+	public Produto buscaProdutoPorId( int id ) {
+		return produtos.stream().filter( p -> p.getId() == id ).findFirst().orElseThrow();
 	}
 
-	public Produto buscaProdutoPorId( int id ) {
-		for( Produto produto : produtos ) {
-			if( produto.getId() == id ) {
-				return produto;
-			}
-		}
-		throw new RuntimeException( "Produto com o código " + id + " não encontrado!" );
+	public Produto buscaProdutoPorNome( String nome ) {
+		return produtos.stream().filter( p -> p.getNome().equalsIgnoreCase( nome ) ).findFirst().orElseThrow();
 	}
 
 	public List<Produto> getProdutos() {

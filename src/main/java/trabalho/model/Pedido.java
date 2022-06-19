@@ -4,27 +4,24 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import trabalho.exception.OperacaoInvalidaException;
+import trabalho.business.PedidoBusiness;
+import trabalho.dao.ClienteDAO;
+import trabalho.dao.DescontoDAO;
+import trabalho.dao.ImpostoDAO;
+import trabalho.dao.PedidoDAO;
+import trabalho.dao.UfDAO;
 import trabalho.exception.StateException;
 import trabalho.state.IPedidoState;
-import trabalho.state.PedidoAguardandoPagamento;
-import trabalho.state.PedidoCanceladoPeloCliente;
-import trabalho.state.PedidoCanceladoPeloEstabelecimento;
-import trabalho.state.PedidoConfirmado;
-import trabalho.state.PedidoEmRotaDeEntrega;
-import trabalho.state.PedidoEntregue;
 import trabalho.state.PedidoNovo;
-import trabalho.state.PedidoProntoParaEntrega;
-import trabalho.state.PedidoReembolsado;
 
 public class Pedido {
 
 	private int numero;
 	private LocalDateTime data;
-	private double valor;
-	private double valorTotalImpostos;
-	private double valorFinalAPagar;
-	private double valorTotalDescontos;
+	protected double valorTotal;
+	protected double valorTotalImpostos;
+	protected double valorFinalAPagar;
+	protected double valorTotalDescontos;
 	private String uf;
 	private Cliente cliente;
 	private List<Imposto> impostos = new ArrayList<Imposto>();
@@ -32,118 +29,18 @@ public class Pedido {
 	private List<ItemPedido> itensPedido = new ArrayList<ItemPedido>();
 	protected IPedidoState estado;
 
-	public Pedido() {
-		super();
-		this.estado = new PedidoNovo();
-	}
-
-	public Pedido( int numero, LocalDateTime data, double valor, double valorTotalImpostos, double valorFinalAPagar, double valorTotalDescontos, String uf, Cliente cliente, List<Imposto> impostos, List<Desconto> descontos, List<ItemPedido> itensPedido ) {
-		super();
-		this.numero = numero;
-		this.data = data;
-		this.valor = valor;
-		this.valorTotalImpostos = valorTotalImpostos;
-		this.valorFinalAPagar = valorFinalAPagar;
-		this.valorTotalDescontos = valorTotalDescontos;
-		this.uf = uf;
-		this.cliente = cliente;
-		this.impostos = impostos;
-		this.descontos = descontos;
-		this.itensPedido = itensPedido;
-		this.estado = new PedidoNovo();
-	}
-
-	public void criarPedido() throws OperacaoInvalidaException, StateException {
-		if( this.estado == null ) {
-			this.estado = new PedidoNovo().criarPedido();
-		}
-	}
-
-	public List<ItemPedido> incluirRemoverItemPedido( List<ItemPedido> itensPedido ) throws OperacaoInvalidaException, StateException {
-		if( !( this.estado instanceof PedidoNovo ) ) {
-			throw new OperacaoInvalidaException( "Operação inválida!" );
-		}
-		return new PedidoNovo().incluirRemoverItemPedido( itensPedido );
-	}
-
-	public void concluirPedido( Pedido pedido ) throws OperacaoInvalidaException, StateException {
-		if( !( this.estado instanceof PedidoNovo ) ) {
-			throw new OperacaoInvalidaException( "Operação inválida!" );
-		}
-		this.estado = new PedidoNovo().concluirPedido( pedido );
-	}
-
-	public void cancelarPedido() throws OperacaoInvalidaException, StateException {
-		if( !( this.estado instanceof PedidoNovo ) || !( this.estado instanceof PedidoAguardandoPagamento ) || !( this.estado instanceof PedidoProntoParaEntrega ) || !( this.estado instanceof PedidoConfirmado ) ) {
-			throw new OperacaoInvalidaException( "Operação inválida!" );
-		}
-		if( this.estado instanceof PedidoNovo ) {
-			this.estado = new PedidoNovo().cancelarPedido();
-		}
-
-		if( this.estado instanceof PedidoAguardandoPagamento ) {
-			this.estado = new PedidoAguardandoPagamento().cancelarPedido();
-		}
-
-		if( this.estado instanceof PedidoProntoParaEntrega ) {
-			this.estado = new PedidoProntoParaEntrega().cancelarPedido();
-		}
-
-		if( this.estado instanceof PedidoConfirmado ) {
-			this.estado = new PedidoConfirmado().cancelarPedido();
-		}
-	}
-
-	public void pagarPedido( Pedido pedido ) throws OperacaoInvalidaException, StateException {
-		if( !( this.estado instanceof PedidoAguardandoPagamento ) ) {
-			throw new OperacaoInvalidaException( "Operação inválida!" );
-		}
-		this.estado = new PedidoAguardandoPagamento().pagarPedido( pedido );
-	}
-
-	public void prepararPedido() throws OperacaoInvalidaException, StateException {
-		if( !( this.estado instanceof PedidoConfirmado ) ) {
-			throw new OperacaoInvalidaException( "Operação inválida!" );
-		}
-		this.estado = new PedidoConfirmado().prepararPedido();
-	}
-
-	public void sairParaEntregarPedido() throws OperacaoInvalidaException, StateException {
-		if( !( this.estado instanceof PedidoProntoParaEntrega ) ) {
-			throw new OperacaoInvalidaException( "Operação inválida!" );
-		}
-		this.estado = new PedidoProntoParaEntrega().sairParaEntregarPedido();
-	}
-
-	public void entregarPedido() throws OperacaoInvalidaException, StateException {
-		if( !( this.estado instanceof PedidoEmRotaDeEntrega ) ) {
-			throw new OperacaoInvalidaException( "Operação inválida!" );
-		}
-		this.estado = new PedidoEmRotaDeEntrega().entregarPedido();
-	}
-
-	public void reembolsarPedido() throws OperacaoInvalidaException, StateException {
-		if( !( this.estado instanceof PedidoCanceladoPeloEstabelecimento ) || !( this.estado instanceof PedidoCanceladoPeloCliente ) ) {
-			throw new OperacaoInvalidaException( "Operação inválida!" );
-		}
-		if( this.estado instanceof PedidoCanceladoPeloEstabelecimento ) {
-			this.estado = new PedidoCanceladoPeloEstabelecimento().reembolsarPedido();
-		}
-
-		if( this.estado instanceof PedidoCanceladoPeloCliente ) {
-			this.estado = new PedidoCanceladoPeloCliente().reembolsarPedido();
-		}
-	}
-
-	public int avaliarAtendimentoPedido() throws OperacaoInvalidaException, StateException {
-		if( this.estado instanceof PedidoEntregue ) {
-			return new PedidoEntregue().avaliarAtendimentoPedido();
-		}
-
-		if( this.estado instanceof PedidoReembolsado ) {
-			return new PedidoReembolsado().avaliarAtendimentoPedido();
-		}
-		throw new OperacaoInvalidaException( "Operação inválida!" );
+	public Pedido( PedidoBusiness pedidoBusiness ) throws StateException {
+		this.numero = PedidoDAO.getInstance().getQuantidadePedidos() + 1;
+		this.data = LocalDateTime.now();
+		this.valorTotal = 0.00;
+		this.valorTotalImpostos = 0.00;
+		this.valorFinalAPagar = 0.00;
+		this.valorTotalDescontos = 0.00;
+		this.uf = UfDAO.getInstance().buscaUfAleatorio();
+		this.cliente = ClienteDAO.getInstance().buscaClienteAleatorio();
+		this.impostos = ImpostoDAO.getInstance().getImpostos();
+		this.descontos = DescontoDAO.getInstance().getDescontos();
+		this.estado = new PedidoNovo( pedidoBusiness );
 	}
 
 	public int getNumero() {
@@ -162,12 +59,12 @@ public class Pedido {
 		this.data = data;
 	}
 
-	public double getValor() {
-		return valor;
+	public double getValorTotal() {
+		return valorTotal;
 	}
 
-	public void setValor( double valor ) {
-		this.valor = valor;
+	public void setValorTotal( double valorTotal ) {
+		this.valorTotal = valorTotal;
 	}
 
 	public double getValorTotalImpostos() {
@@ -240,6 +137,21 @@ public class Pedido {
 
 	public void setEstado( IPedidoState estado ) {
 		this.estado = estado;
+	}
+
+	public ItemPedido buscaItemPorProdutoItens( Produto produto ) {
+		for( var itemPedido : this.getItensPedido() ) {
+			if( itemPedido.getProduto().getId() == produto.getId() ) {
+				return itemPedido;
+			}
+		}
+		throw new RuntimeException( "Produto com o código " + produto.getId() + " não encontrado na lista de itens!" );
+	}
+
+	@Override
+	public String toString() {
+		return "Pedido [numero=" + numero + ", data=" + data + ", valorTotal=" + valorTotal + ", valorTotalImpostos=" + valorTotalImpostos + ", valorFinalAPagar=" + valorFinalAPagar + ", valorTotalDescontos=" + valorTotalDescontos + ", uf=" + uf + ", cliente=" + cliente + ", impostos=" + impostos
+				+ ", descontos=" + descontos + ", itensPedido=" + itensPedido + ", estado=" + estado + "]";
 	}
 
 }

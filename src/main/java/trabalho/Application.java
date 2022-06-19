@@ -1,49 +1,33 @@
 package trabalho;
 
-import java.time.LocalDateTime;
-
+import trabalho.business.PedidoBusiness;
+import trabalho.dao.PedidoDAO;
+import trabalho.dao.ProdutoDAO;
 import trabalho.exception.OperacaoInvalidaException;
 import trabalho.exception.StateException;
-import trabalho.model.Cliente;
-import trabalho.model.Pedido;
 
 public class Application {
 
-	public static void main( String[] args ) {
-		var pedido = new Pedido();
+	public static void main( String[] args ) throws OperacaoInvalidaException, StateException {
+//		var pedidoBusiness1 = new PedidoBusiness();
+//		pedidoBusiness1.incluirItemPedido( 1, 5 );
+//		pedidoBusiness1.removerItemPedido( 1, 2 );
+//		pedidoBusiness1.cancelarPedido();
+//		pedidoBusiness1.reembolsarPedido();
+//		pedidoBusiness1.avaliarAtendimentoPedido();
 
-		pedido.setCliente( new Cliente( "Dener" ) );
+		var pedidoBusiness2 = new PedidoBusiness();
+		pedidoBusiness2.incluirItemPedido( 1, 5 );
+		pedidoBusiness2.removerItemPedido( 1, 2 );
+		pedidoBusiness2.concluirPedido();
+		pedidoBusiness2.pagarPedido();
+		pedidoBusiness2.prepararPedido();
+		pedidoBusiness2.sairParaEntregarPedido();
+		pedidoBusiness2.entregarPedido();
+		pedidoBusiness2.avaliarAtendimentoPedido();
 
-		try {
-			var listaItemPedido = pedido.incluirRemoverItemPedido( pedido.getItensPedido() );
-			pedido.setItensPedido( listaItemPedido );
-		} catch ( OperacaoInvalidaException | StateException e ) {
-			e.printStackTrace();
-		}
-
-		pedido.setData( LocalDateTime.parse( "2022-02-15T10:28:00" ) );
-		pedido.setNumero( 0001 );
-		pedido.setUf( "MG" );
-		pedido.setValor( 500.00 );
-		pedido.setValorFinalAPagar( 500.00 );
-		pedido.setValorTotalDescontos( 0 );
-		pedido.setValorTotalImpostos( 0 );
-
-		try {
-			pedido.criarPedido();
-			pedido.concluirPedido( pedido );
-			pedido.pagarPedido( pedido );
-			pedido.prepararPedido();
-			pedido.sairParaEntregarPedido();
-			pedido.entregarPedido();
-			var avaliacao = pedido.avaliarAtendimentoPedido();
-			System.out.println( "Pedido realizado com sucesso! Avaliação: " + avaliacao );
-		} catch ( StateException se ) {
-			se.printStackTrace();
-		} catch ( OperacaoInvalidaException oie ) {
-			oie.printStackTrace();
-		}
-
+		ProdutoDAO.getInstance().getProdutos().stream().forEach( System.out::println );
+		PedidoDAO.getInstance().getPedidos().stream().forEach( System.out::println );
 	}
 
 }
