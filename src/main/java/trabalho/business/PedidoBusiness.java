@@ -26,7 +26,7 @@ public class PedidoBusiness {
 
 	private Pedido pedido;
 
-	public PedidoBusiness() throws StateException {
+	public PedidoBusiness() {
 		this.pedido = new Pedido( this );
 	}
 
@@ -34,14 +34,14 @@ public class PedidoBusiness {
 		return pedido;
 	}
 
-	public void incluirItemPedido( int idProduto, double quantidade ) throws OperacaoInvalidaException, StateException {
+	public void incluirItemPedido( int idProduto, double quantidade ) throws OperacaoInvalidaException {
 		if( !( pedido.getEstado() instanceof PedidoNovo ) ) {
 			operacaoInvalida();
 		}
 		incluirItemPedidoNaLista( idProduto, quantidade );
 	}
 
-	public void removerItemPedido( int idProduto, double quantidade ) throws OperacaoInvalidaException, StateException {
+	public void removerItemPedido( int idProduto, double quantidade ) throws OperacaoInvalidaException {
 		if( !( pedido.getEstado() instanceof PedidoNovo ) ) {
 			operacaoInvalida();
 		}
@@ -143,7 +143,7 @@ public class PedidoBusiness {
 		}
 	}
 
-	public void avaliarAtendimentoPedido() throws OperacaoInvalidaException, StateException {
+	public void avaliarAtendimentoPedido() throws OperacaoInvalidaException {
 		boolean isOperacaoValida = !( pedido.getEstado() instanceof PedidoEntregue ) || !( pedido.getEstado() instanceof PedidoReembolsado );
 		if( !isOperacaoValida ) {
 			operacaoInvalida();

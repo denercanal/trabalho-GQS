@@ -5,7 +5,7 @@ import trabalho.exception.StateException;
 
 public class PedidoNovo implements IPedidoState {
 
-	private final String EXCEPTION = "Operação em um Estado Inválido!";
+	private static final String STATE_INVALIDO = "Operação em um Estado Inválido!";
 
 	private PedidoBusiness pedidoBusiness;
 
@@ -40,32 +40,32 @@ public class PedidoNovo implements IPedidoState {
 
 	@Override
 	public IPedidoState pagarPedido() throws StateException {
-		throw new StateException( EXCEPTION );
+		throw new StateException( STATE_INVALIDO );
 	}
 
 	@Override
 	public IPedidoState prepararPedido() throws StateException {
-		throw new StateException( EXCEPTION );
+		throw new StateException( STATE_INVALIDO );
 	}
 
 	@Override
 	public IPedidoState sairParaEntregarPedido() throws StateException {
-		throw new StateException( EXCEPTION );
+		throw new StateException( STATE_INVALIDO );
 	}
 
 	@Override
 	public IPedidoState entregarPedido() throws StateException {
-		throw new StateException( EXCEPTION );
+		throw new StateException( STATE_INVALIDO );
 	}
 
 	@Override
 	public IPedidoState reembolsarPedido() throws StateException {
-		throw new StateException( EXCEPTION );
+		throw new StateException( STATE_INVALIDO );
 	}
 
 	@Override
 	public void avaliarAtendimentoPedido() throws StateException {
-		throw new StateException( EXCEPTION );
+		throw new StateException( STATE_INVALIDO );
 	}
 
 }

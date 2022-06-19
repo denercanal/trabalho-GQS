@@ -10,7 +10,6 @@ import trabalho.dao.DescontoDAO;
 import trabalho.dao.ImpostoDAO;
 import trabalho.dao.PedidoDAO;
 import trabalho.dao.UfDAO;
-import trabalho.exception.StateException;
 import trabalho.state.IPedidoState;
 import trabalho.state.PedidoNovo;
 
@@ -29,7 +28,7 @@ public class Pedido {
 	private List<ItemPedido> itensPedido = new ArrayList<ItemPedido>();
 	protected IPedidoState estado;
 
-	public Pedido( PedidoBusiness pedidoBusiness ) throws StateException {
+	public Pedido( PedidoBusiness pedidoBusiness ) {
 		this.numero = PedidoDAO.getInstance().getQuantidadePedidos() + 1;
 		this.data = LocalDateTime.now();
 		this.valorTotal = 0.00;
