@@ -4,15 +4,12 @@ public class Produto {
 
 	private int id;
 	private String nome;
-	private int quantidadeEmEstoque;
+	private double quantidadeEmEstoque;
 	private double precoUnitario;
 
-	public Produto() {
-		super();
-	}
+	public Produto() {}
 
 	public Produto( int id, String nome, int quantidadeEmEstoque, double precoUnitario ) {
-		super();
 		this.id = id;
 		this.nome = nome;
 		this.quantidadeEmEstoque = quantidadeEmEstoque;
@@ -35,11 +32,11 @@ public class Produto {
 		this.nome = nome;
 	}
 
-	public int getQuantidadeEmEstoque() {
+	public double getQuantidadeEmEstoque() {
 		return quantidadeEmEstoque;
 	}
 
-	public void setQuantidadeEmEstoque( int quantidadeEmEstoque ) {
+	public void setQuantidadeEmEstoque( double quantidadeEmEstoque ) {
 		this.quantidadeEmEstoque = quantidadeEmEstoque;
 	}
 

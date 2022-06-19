@@ -6,15 +6,12 @@ public class Imposto {
 	private double percentual;
 	private double valor;
 
-	public Imposto() {
-		super();
-	}
+	public Imposto() {}
 
-	public Imposto( String nome, double percentual, double valor ) {
-		super();
+	public Imposto( String nome, double percentual ) {
 		this.nome = nome;
 		this.percentual = percentual;
-		this.valor = valor;
+		this.valor = 0;
 	}
 
 	public String getNome() {

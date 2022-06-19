@@ -8,14 +8,11 @@ public class Desconto {
 	private double valorDesconto;
 	private double percentual;
 
-	public Desconto() {
-		super();
-	}
+	public Desconto() {}
 
-	public Desconto( TipoDescontoEnum tipo, double valorDesconto, double percentual ) {
-		super();
+	public Desconto( TipoDescontoEnum tipo, double percentual ) {
 		this.tipo = tipo;
-		this.valorDesconto = valorDesconto;
+		this.valorDesconto = 0;
 		this.percentual = percentual;
 	}
 

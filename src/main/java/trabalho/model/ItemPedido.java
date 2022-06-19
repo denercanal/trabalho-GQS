@@ -1,29 +1,28 @@
 package trabalho.model;
 
+import trabalho.exception.DAOException;
+
 public class ItemPedido {
 
-	private int quantidade;
+	private double quantidade;
 	private double valorUnitario;
 	private double valorTotal;
 	private Produto produto;
 
-	public ItemPedido() {
-		super();
-	}
+	public ItemPedido() {}
 
-	public ItemPedido( int quantidade, double valorUnitario, double valorTotal, Produto produto ) {
-		super();
-		this.quantidade = quantidade;
-		this.valorUnitario = valorUnitario;
-		this.valorTotal = valorTotal;
+	public ItemPedido( Produto produto, double quantidade ) {
 		this.produto = produto;
+		this.quantidade = quantidade;
+		this.valorUnitario = produto.getPrecoUnitario();
+		this.valorTotal = this.quantidade * this.valorUnitario;
 	}
 
-	public int getQuantidade() {
+	public double getQuantidade() {
 		return quantidade;
 	}
 
-	public void setQuantidade( int quantidade ) {
+	public void setQuantidade( double quantidade ) {
 		this.quantidade = quantidade;
 	}
 
@@ -49,6 +48,22 @@ public class ItemPedido {
 
 	public void setProduto( Produto produto ) {
 		this.produto = produto;
+	}
+
+	public void aumentarQuantidade( double quantidade ) {
+		if( quantidade > 0 ) {
+			this.quantidade += quantidade;
+		} else {
+			throw new DAOException( "Não pode-se adicionar 0 ou menos elementos no pedido!" );
+		}
+	}
+
+	public void diminuirQuantidade( double quantidade ) {
+		if( quantidade <= this.quantidade ) {
+			this.quantidade -= quantidade;
+		} else {
+			throw new DAOException( "Não se pode remover um valor maior que existe no pedido!" );
+		}
 	}
 
 }

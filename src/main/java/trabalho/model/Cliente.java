@@ -4,12 +4,9 @@ public class Cliente {
 
 	private String nome;
 
-	public Cliente() {
-		super();
-	}
+	public Cliente() {}
 
 	public Cliente( String nome ) {
-		super();
 		this.nome = nome;
 	}
 
