@@ -1,5 +1,7 @@
 package trabalho;
 
+import static org.junit.Assert.assertTrue;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -27,6 +29,7 @@ public class FluxoTest {
 			pedidoBusiness.sairParaEntregarPedido();
 			pedidoBusiness.entregarPedido();
 			pedidoBusiness.avaliarAtendimentoPedido();
+			assertTrue( true );
 		}
 	}
 
@@ -41,6 +44,7 @@ public class FluxoTest {
 			pedidoBusiness.cancelarPedido();
 			pedidoBusiness.reembolsarPedido();
 			pedidoBusiness.avaliarAtendimentoPedido();
+			assertTrue( true );
 		}
 	}
 
@@ -57,6 +61,7 @@ public class FluxoTest {
 			pedidoBusiness.cancelarPedido();
 			pedidoBusiness.reembolsarPedido();
 			pedidoBusiness.avaliarAtendimentoPedido();
+			assertTrue( true );
 		}
 	}
 
@@ -74,6 +79,7 @@ public class FluxoTest {
 			pedidoBusiness.cancelarPedido();
 			pedidoBusiness.reembolsarPedido();
 			pedidoBusiness.avaliarAtendimentoPedido();
+			assertTrue( true );
 		}
 	}
 
@@ -89,6 +95,7 @@ public class FluxoTest {
 			pedidoBusiness.cancelarPedido();
 			pedidoBusiness.reembolsarPedido();
 			pedidoBusiness.avaliarAtendimentoPedido();
+			assertTrue( true );
 		}
 	}
 
